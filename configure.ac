@@ -1,7 +1,7 @@
-AC_INIT([ccminer-fancyIX], [0.5.1], [], [ccminer-fancyIX], [https://github.com/fancyIX/ccminer])
+AC_INIT([ccminer-fancyIX],[0.5.1],[],[ccminer-fancyIX],[https://github.com/fancyIX/ccminer])
 
-AC_PREREQ([2.59c])
-AC_CANONICAL_SYSTEM
+AC_PREREQ([2.71])
+AC_CANONICAL_TARGET
 AC_CONFIG_SRCDIR([ccminer.cpp])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 AC_CONFIG_HEADERS([ccminer-config.h])
@@ -10,16 +10,23 @@ dnl Make sure anyone changing configure.ac/Makefile.am has a clue
 AM_MAINTAINER_MODE
 
 dnl Checks for programs
-AC_PROG_CC_C99
+AC_PROG_CC
 AC_PROG_GCC_TRADITIONAL
 AM_PROG_CC_C_O
 AM_PROG_AS
 AC_PROG_RANLIB
 AC_PROG_CXX
 AC_OPENMP
-
+AC_DEFUN([AC_MSG_ERROR], [
+    AS_ECHO(["$1"])
+    AC_MSG_FAILURE([$1])
+])
 dnl Checks for header files
-AC_HEADER_STDC
+# Autoupdate added the next two lines to ensure that your configure
+# script's behavior did not change.  They are probably safe to remove.
+AC_CHECK_INCLUDES_DEFAULT
+AC_PROG_EGREP
+
 AC_CHECK_HEADERS([sys/endian.h sys/param.h syslog.h])
 # sys/sysctl.h requires sys/types.h on FreeBSD
 # sys/sysctl.h requires sys/param.h on OpenBSD
@@ -88,9 +95,9 @@ AM_CONDITIONAL([ARCH_x86_64], [test x$have_x86_64 = xtrue])
 
 if test x$request_jansson = xtrue
 then
-	JANSSON_LIBS="compat/jansson/libjansson.a"
+        JANSSON_LIBS="compat/jansson/libjansson.a"
 else
-	JANSSON_LIBS=-ljansson
+        JANSSON_LIBS=-ljansson
 fi
 
 LIBCURL_CHECK_CONFIG(, 7.15.2, ,
@@ -102,10 +109,10 @@ AC_SUBST(PTHREAD_LIBS)
 AC_SUBST(WS2_LIBS)
 
 AC_CONFIG_FILES([
-	Makefile
-	compat/Makefile
-	compat/jansson/Makefile
-	])
+        Makefile
+        compat/Makefile
+        compat/jansson/Makefile
+        ])
 
 dnl find out what version we are running
 ARCH=`uname -m`
